@@ -2,10 +2,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import model.Book;
+import model.Order;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,5 +140,49 @@ public class RestAssuredTest {
                 .response();
 
         return response.jsonPath().getList(BOOKS, Book.class);
+    }
+
+    @Test(priority = 6)
+    public void createOrderAndValidateResponse() {
+        RestAssured.baseURI = PETSTORE_BASE_URI;
+
+        //lombok-ის დამსახურებით ბილდერ დიზაინ პატერნი გამოვიყენე
+        Order order = Order.builder()
+                .id(ORDER_ID)
+                .petId(PET_ID)
+                .quantity(QUANTITY)
+                .shipDate(SHIP_DATE)
+                .status(STATUS)
+                .complete(COMPLETE)
+                .build();
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(order)
+                .when()
+                .post("/store/order")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        Order responseOrder = response.as(Order.class);
+        String expectedDateStr = order.getShipDate();
+        String actualDateStr = fixTimezoneFormat(responseOrder.getShipDate());
+
+        OffsetDateTime expectedDate = OffsetDateTime.parse(expectedDateStr);
+        OffsetDateTime actualDate = OffsetDateTime.parse(actualDateStr);
+
+        Assert.assertEquals(actualDate, expectedDate, SHIP_DATE_MISMATCH);
+        Assert.assertEquals(responseOrder.getId(), order.getId(), ORDER_ID_MISMATCH);
+        Assert.assertEquals(responseOrder.getPetId(), order.getPetId(), PET_ID_MISMATCH);
+        Assert.assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
+        Assert.assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
+        Assert.assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
+    }
+
+    private String fixTimezoneFormat(String dateStr) {
+        return dateStr.replaceAll("([+-]\\d{2})(\\d{2})$", "$1:$2");
     }
 }
