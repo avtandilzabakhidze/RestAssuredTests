@@ -12,6 +12,8 @@ public class Constants {
             DOCS = "docs",
             HARRY = "Harry Potter",
             REGEX = "\\b\\d{13}\\b",
+            REGEX2 = "([+-]\\d{2})(\\d{2})$",
+            REPLACE = "$1:$2",
             ISBN_BASE = "ISBN",
             CONTAINS_DIGIT = "should contain a 13-digit",
             CODE_401 = "Expected 401 Code",

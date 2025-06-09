@@ -133,20 +133,6 @@ public class RestAssuredTest {
         assertEquals(actualMessage, USER_NOT_AUTHORIZED, UNEXPECTED_ERROR);
     }
 
-
-    private List<Book> fetchBooks() {
-        Response response = RestAssured
-                .given()
-                .when()
-                .get("/BookStore/v1/Books")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
-
-        return response.jsonPath().getList(BOOKS, Book.class);
-    }
-
     @Test(priority = 6)
     public void createOrderAndValidateResponse() {
         RestAssured.baseURI = PETSTORE_BASE_URI;
@@ -185,10 +171,6 @@ public class RestAssuredTest {
         assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
         assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
         assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
-    }
-
-    private String fixTimezoneFormat(String dateStr) {
-        return dateStr.replaceAll("([+-]\\d{2})(\\d{2})$", "$1:$2");
     }
 
     @Test(priority = 7)
@@ -290,5 +272,22 @@ public class RestAssuredTest {
         }
 
         Assert.assertTrue(found, EXPECTED_BOOK);
+    }
+
+    private List<Book> fetchBooks() {
+        Response response = RestAssured
+                .given()
+                .when()
+                .get("/BookStore/v1/Books")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        return response.jsonPath().getList(BOOKS, Book.class);
+    }
+
+    private String fixTimezoneFormat(String dateStr) {
+        return dateStr.replaceAll(REGEX2, REPLACE);
     }
 }
