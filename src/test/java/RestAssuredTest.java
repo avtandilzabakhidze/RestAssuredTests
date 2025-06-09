@@ -107,7 +107,6 @@ public class RestAssuredTest {
         assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
         assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
         Assert.assertTrue(bookDetails.getPages() > 0, PAGES_COUNT_INVALID);
-
     }
 
     @Test(priority = 5)
