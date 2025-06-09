@@ -6,6 +6,7 @@ public class Constants {
             OPENLIBRARY_BASE_URI = "https://openlibrary.org",
             ISBN = "123123",
             USER_NAME = "userNam",
+            PASSWORD = "userNam",
             MESSAGE = "message",
             BOOKS = "books",
             ISBN_BASE = "ISBN",
@@ -23,6 +24,7 @@ public class Constants {
             ORDER_ID_MISMATCH = "Order ID mismatch",
             PET_ID_MISMATCH = "Pet ID mismatch",
             QUANTITY_MISMATCH = "Quantity mismatch",
+            NOT_BE_NULL = "should not be null",
             STATUS_MISMATCH = "Status mismatch",
             COMPLETE_FLAG_MISMATCH = "Complete flag mismatch",
             SHIP_DATE_MISMATCH = "ShipDate mismatch";
@@ -30,10 +32,12 @@ public class Constants {
     public static final long ORDER_ID = 12345L;
     public static final long PET_ID = 54321L;
     public static final int QUANTITY = 2;
+    public static final long FIRST = 2;
+    public static final long LAST = 999999L;
     public static final String SHIP_DATE = "2025-06-10T10:00:00.000Z";
     public static final String STATUS = "placed";
     public static final boolean COMPLETE = true;
-    public static final String NEW_NAME = "Fluffy";
-    public static final String NEW_STATUS = "available";
+    public static final String NEW_NAME = "one";
+    public static final String NEW_STATUS = "two";
 
 }

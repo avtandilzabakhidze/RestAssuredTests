@@ -1,5 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import model.Book;
 import model.Order;
@@ -11,8 +12,12 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static data.Constants.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class RestAssuredTest {
     @Test
@@ -31,10 +36,10 @@ public class RestAssuredTest {
         Book firstBook = books.get(0);
         Book secondBook = books.get(1);
 
-        Assert.assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
-        Assert.assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
-        Assert.assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
-        Assert.assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
+        assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
+        assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
+        assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
+        assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
     }
 
     @Test(priority = 3)
@@ -55,10 +60,10 @@ public class RestAssuredTest {
 
             Book bookDetails = response.as(Book.class);
 
-            Assert.assertEquals(bookDetails.getAuthor(), book.getAuthor(), AUTHOR_MISMATCH);
-            Assert.assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
-            Assert.assertNotNull(bookDetails.getIsbn(), ISBN_NOT_NULL_DETAIL);
-            Assert.assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
+            assertEquals(bookDetails.getAuthor(), book.getAuthor(), AUTHOR_MISMATCH);
+            assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
+            assertNotNull(bookDetails.getIsbn(), ISBN_NOT_NULL_DETAIL);
+            assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
             Assert.assertTrue(bookDetails.getPages() > 0, PAGES_COUNT_INVALID);
 
         }
@@ -97,10 +102,10 @@ public class RestAssuredTest {
 
         Book bookDetails = response.as(Book.class);
 
-        Assert.assertEquals(bookDetails.getIsbn(), isbn, ISBN_NOT_NULL_DETAIL);
-        Assert.assertEquals(bookDetails.getAuthor(), expectedAuthor, AUTHOR_MISMATCH);
-        Assert.assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
-        Assert.assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
+        assertEquals(bookDetails.getIsbn(), isbn, ISBN_NOT_NULL_DETAIL);
+        assertEquals(bookDetails.getAuthor(), expectedAuthor, AUTHOR_MISMATCH);
+        assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
+        assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
         Assert.assertTrue(bookDetails.getPages() > 0, PAGES_COUNT_INVALID);
 
     }
@@ -123,9 +128,9 @@ public class RestAssuredTest {
                 .extract()
                 .response();
 
-        Assert.assertEquals(response.statusCode(), 401, CODE_401);
+        assertEquals(response.statusCode(), 401, CODE_401);
         String actualMessage = response.jsonPath().getString(MESSAGE);
-        Assert.assertEquals(actualMessage, USER_NOT_AUTHORIZED, UNEXPECTED_ERROR);
+        assertEquals(actualMessage, USER_NOT_AUTHORIZED, UNEXPECTED_ERROR);
     }
 
 
@@ -174,15 +179,118 @@ public class RestAssuredTest {
         OffsetDateTime expectedDate = OffsetDateTime.parse(expectedDateStr);
         OffsetDateTime actualDate = OffsetDateTime.parse(actualDateStr);
 
-        Assert.assertEquals(actualDate, expectedDate, SHIP_DATE_MISMATCH);
-        Assert.assertEquals(responseOrder.getId(), order.getId(), ORDER_ID_MISMATCH);
-        Assert.assertEquals(responseOrder.getPetId(), order.getPetId(), PET_ID_MISMATCH);
-        Assert.assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
-        Assert.assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
-        Assert.assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
+        assertEquals(actualDate, expectedDate, SHIP_DATE_MISMATCH);
+        assertEquals(responseOrder.getId(), order.getId(), ORDER_ID_MISMATCH);
+        assertEquals(responseOrder.getPetId(), order.getPetId(), PET_ID_MISMATCH);
+        assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
+        assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
+        assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
     }
 
     private String fixTimezoneFormat(String dateStr) {
         return dateStr.replaceAll("([+-]\\d{2})(\\d{2})$", "$1:$2");
+    }
+
+    @Test
+    public void updatePetWithFormData() {
+        RestAssured.baseURI = PETSTORE_BASE_URI;
+
+        Response response = RestAssured.given()
+                .contentType("application/x-www-form-urlencoded")
+                .pathParam("petId", FIRST)
+                .formParam("name", NEW_NAME)
+                .formParam("status", NEW_STATUS)
+                .when()
+                .post("/pet/{petId}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        JsonPath jsonPath = response.jsonPath();
+        Assert.assertNotNull(jsonPath.get("code"), NOT_BE_NULL);
+        Assert.assertNotNull(jsonPath.get("type"), NOT_BE_NULL);
+        Assert.assertNotNull(jsonPath.get("message"), NOT_BE_NULL);
+    }
+
+    @Test
+    public void updatePetWithNonExistentPetId_shouldReturn404() {
+        RestAssured.baseURI = PETSTORE_BASE_URI;
+
+        Response response = RestAssured.given()
+                .contentType("application/x-www-form-urlencoded")
+                .pathParam("petId", LAST)
+                .formParam("name", NEW_NAME)
+                .formParam("status", NEW_STATUS)
+                .when()
+                .post("/pet/{petId}")
+                .then()
+                .statusCode(404)
+                .extract()
+                .response();
+    }
+
+    @Test
+    public void userLoginWithValidCredentials() {
+        RestAssured.baseURI = PETSTORE_BASE_URI;
+
+        Response response = RestAssured.given()
+                .queryParam("username", USER_NAME)
+                .queryParam("password", PASSWORD)
+                .when()
+                .get("/user/login")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        response.prettyPrint();
+
+        JsonPath jsonPath = response.jsonPath();
+        String message = jsonPath.getString("message");
+        Assert.assertNotNull(message, "Message should not be null");
+
+        Pattern pattern = Pattern.compile("\\b\\d{13}\\b");
+        Matcher matcher = pattern.matcher(message);
+
+        Assert.assertTrue(matcher.find(), "Message should contain a 13-digit number");
+        String tenDigitNumber = matcher.group();
+        System.out.println(tenDigitNumber);
+        Assert.assertEquals(tenDigitNumber.length(), 13, "Number length should be exactly 13");
+    }
+
+    @Test
+    public void validateHarryPotterBookExists() {
+        RestAssured.baseURI = "https://openlibrary.org";
+
+        Response response = RestAssured.given()
+                .queryParam("q", "Harry Potter")
+                .when()
+                .get("/search.json")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        JsonPath jsonPath = response.jsonPath();
+
+        List<Map<String, Object>> docs = jsonPath.getList("docs");
+        Assert.assertNotNull(docs, "Docs list should not be null");
+        Assert.assertFalse(docs.isEmpty(), "Docs list should not be empty");
+
+        boolean found = false;
+
+        for (Map<String, Object> book : docs) {
+            String title = (String) book.get("title");
+            List<String> authorNames = (List<String>) book.get("author_name");
+
+            if ("Harry Potter and the Philosopher's Stone".equals(title)
+                    && authorNames != null && authorNames.contains("J. K. Rowling")) {
+                found = true;
+                break;
+            }
+        }
+
+        Assert.assertTrue(found, "Expected book with the correct title and author was not found");
     }
 }
