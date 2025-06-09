@@ -33,8 +33,8 @@ public class RestAssuredTest {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
         List<Book> books = fetchBooks();
 
-        Book firstBook = books.get(0);
-        Book secondBook = books.get(1);
+        Book firstBook = books.get(ZERO);
+        Book secondBook = books.get(FIRST);
 
         assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
         assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
@@ -158,7 +158,7 @@ public class RestAssuredTest {
                 .quantity(QUANTITY)
                 .shipDate(SHIP_DATE)
                 .status(STATUS)
-                .complete(COMPLETE)
+                .complete(IS_TRUE)
                 .build();
 
         Response response = RestAssured
@@ -191,13 +191,13 @@ public class RestAssuredTest {
         return dateStr.replaceAll("([+-]\\d{2})(\\d{2})$", "$1:$2");
     }
 
-    @Test
+    @Test(priority = 7)
     public void updatePetWithFormData() {
         RestAssured.baseURI = PETSTORE_BASE_URI;
 
         Response response = RestAssured.given()
                 .contentType("application/x-www-form-urlencoded")
-                .pathParam("petId", FIRST)
+                .pathParam("petId", SECOND)
                 .formParam("name", NEW_NAME)
                 .formParam("status", NEW_STATUS)
                 .when()
@@ -213,7 +213,7 @@ public class RestAssuredTest {
         Assert.assertNotNull(jsonPath.get("message"), NOT_BE_NULL);
     }
 
-    @Test
+    @Test(priority = 8)
     public void updatePetWithNonExistentPetId_shouldReturn404() {
         RestAssured.baseURI = PETSTORE_BASE_URI;
 
@@ -230,7 +230,7 @@ public class RestAssuredTest {
                 .response();
     }
 
-    @Test
+    @Test(priority = 9)
     public void userLoginWithValidCredentials() {
         RestAssured.baseURI = PETSTORE_BASE_URI;
 
@@ -244,27 +244,25 @@ public class RestAssuredTest {
                 .extract()
                 .response();
 
-        response.prettyPrint();
-
         JsonPath jsonPath = response.jsonPath();
-        String message = jsonPath.getString("message");
-        Assert.assertNotNull(message, "Message should not be null");
+        String message = jsonPath.getString(MESSAGE);
+        Assert.assertNotNull(message, NOT_BE_NULL);
 
-        Pattern pattern = Pattern.compile("\\b\\d{13}\\b");
+        Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(message);
 
-        Assert.assertTrue(matcher.find(), "Message should contain a 13-digit number");
+        Assert.assertTrue(matcher.find(), CONTAINS_DIGIT);
         String tenDigitNumber = matcher.group();
         System.out.println(tenDigitNumber);
-        Assert.assertEquals(tenDigitNumber.length(), 13, "Number length should be exactly 13");
+        Assert.assertEquals(tenDigitNumber.length(), CONTAINS_NUM, CONTAINS_DIGIT);
     }
 
-    @Test
+    @Test(priority = 10)
     public void validateHarryPotterBookExists() {
-        RestAssured.baseURI = "https://openlibrary.org";
+        RestAssured.baseURI = OPENLIBRARY_BASE_URI;
 
         Response response = RestAssured.given()
-                .queryParam("q", "Harry Potter")
+                .queryParam(CON_Q, HARRY)
                 .when()
                 .get("/search.json")
                 .then()
@@ -274,9 +272,9 @@ public class RestAssuredTest {
 
         JsonPath jsonPath = response.jsonPath();
 
-        List<Map<String, Object>> docs = jsonPath.getList("docs");
-        Assert.assertNotNull(docs, "Docs list should not be null");
-        Assert.assertFalse(docs.isEmpty(), "Docs list should not be empty");
+        List<Map<String, Object>> docs = jsonPath.getList(DOCS);
+        Assert.assertNotNull(docs, NOT_BE_NULL);
+        Assert.assertFalse(docs.isEmpty(), SHOULD_NOT_EMPTY);
 
         boolean found = false;
 
@@ -291,6 +289,6 @@ public class RestAssuredTest {
             }
         }
 
-        Assert.assertTrue(found, "Expected book with the correct title and author was not found");
+        Assert.assertTrue(found, EXPECTED_BOOK);
     }
 }
