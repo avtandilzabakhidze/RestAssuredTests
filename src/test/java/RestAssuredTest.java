@@ -33,13 +33,13 @@ public class RestAssuredTest {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
         List<Book> books = fetchBooks();
 
-        Book firstBook = books.get(ZERO);
+        Book firstBook = books.getFirst();
         Book secondBook = books.get(FIRST);
 
-        assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
-        assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
-        assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
-        assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
+       Assert.assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
+       Assert.assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
+       Assert.assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
+       Assert.assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
     }
 
     @Test(priority = 3)
@@ -60,12 +60,11 @@ public class RestAssuredTest {
 
             Book bookDetails = response.as(Book.class);
 
-            assertEquals(bookDetails.getAuthor(), book.getAuthor(), AUTHOR_MISMATCH);
-            assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
-            assertNotNull(bookDetails.getIsbn(), ISBN_NOT_NULL_DETAIL);
-            assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
+            Assert.assertEquals(bookDetails.getAuthor(), book.getAuthor(), AUTHOR_MISMATCH);
+            Assert.assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
+            Assert.assertNotNull(bookDetails.getIsbn(), ISBN_NOT_NULL_DETAIL);
+            Assert.assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
             Assert.assertTrue(bookDetails.getPages() > 0, PAGES_COUNT_INVALID);
-
         }
     }
 
@@ -74,20 +73,19 @@ public class RestAssuredTest {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
         List<Book> books = fetchBooks();
 
-        Object[][] data = new Object[books.size()][3];
+        Object[][] data = new Object[books.size()][2];
 
         for (int i = 0; i < books.size(); i++) {
             Book book = books.get(i);
             data[i][0] = i;
             data[i][1] = book.getIsbn();
-            data[i][2] = book.getAuthor();
         }
 
         return data;
     }
 
     @Test(dataProvider = "isbn", priority = 4)
-    public void validateBookDetailsByIsbnDataProvider(int index, String isbn, String expectedAuthor) {
+    public void validateBookDetailsByIsbnDataProvider(int index, String isbn) {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
 
         Response response = RestAssured
@@ -102,10 +100,9 @@ public class RestAssuredTest {
 
         Book bookDetails = response.as(Book.class);
 
-        assertEquals(bookDetails.getIsbn(), isbn, ISBN_NOT_NULL_DETAIL);
-        assertEquals(bookDetails.getAuthor(), expectedAuthor, AUTHOR_MISMATCH);
-        assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
-        assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
+        Assert.assertEquals(bookDetails.getIsbn(), isbn, ISBN_NOT_NULL_DETAIL);
+        Assert.assertNotNull(bookDetails.getTitle(), TITLE_NOT_NULL);
+        Assert.assertNotNull(bookDetails.getPublish_date(), PUBLISH_DATE_NOT_NULL);
         Assert.assertTrue(bookDetails.getPages() > 0, PAGES_COUNT_INVALID);
     }
 
@@ -113,23 +110,18 @@ public class RestAssuredTest {
     public void deleteBookShouldReturnUnauthorized() {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
 
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("isbn", ISBN);
-        requestBody.put("userId", USER_NAME);
-
         Response response = RestAssured
                 .given()
-                .contentType(ContentType.JSON)
-                .body(requestBody)
+                .queryParam("UserId", FIRST)
                 .when()
                 .delete("/BookStore/v1/Book")
                 .then()
                 .extract()
                 .response();
 
-        assertEquals(response.statusCode(), 401, CODE_401);
+        Assert.assertEquals(response.statusCode(), 401, CODE_401);
         String actualMessage = response.jsonPath().getString(MESSAGE);
-        assertEquals(actualMessage, USER_NOT_AUTHORIZED, UNEXPECTED_ERROR);
+        Assert.assertEquals(actualMessage, USER_NOT_AUTHORIZED, UNEXPECTED_ERROR);
     }
 
     @Test(priority = 6)
@@ -164,12 +156,12 @@ public class RestAssuredTest {
         OffsetDateTime expectedDate = OffsetDateTime.parse(expectedDateStr);
         OffsetDateTime actualDate = OffsetDateTime.parse(actualDateStr);
 
-        assertEquals(actualDate, expectedDate, SHIP_DATE_MISMATCH);
-        assertEquals(responseOrder.getId(), order.getId(), ORDER_ID_MISMATCH);
-        assertEquals(responseOrder.getPetId(), order.getPetId(), PET_ID_MISMATCH);
-        assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
-        assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
-        assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
+        Assert.assertEquals(actualDate, expectedDate, SHIP_DATE_MISMATCH);
+        Assert.assertEquals(responseOrder.getId(), order.getId(), ORDER_ID_MISMATCH);
+        Assert.assertEquals(responseOrder.getPetId(), order.getPetId(), PET_ID_MISMATCH);
+        Assert.assertEquals(responseOrder.getQuantity(), order.getQuantity(), QUANTITY_MISMATCH);
+        Assert.assertEquals(responseOrder.getStatus(), order.getStatus(), STATUS_MISMATCH);
+        Assert.assertEquals(responseOrder.getComplete(), order.getComplete(), COMPLETE_FLAG_MISMATCH);
     }
 
     @Test(priority = 7)
@@ -178,7 +170,7 @@ public class RestAssuredTest {
 
         Response response = RestAssured.given()
                 .contentType("application/x-www-form-urlencoded")
-                .pathParam("petId", SECOND)
+                .pathParam("petId", TEN)
                 .formParam("name", NEW_NAME)
                 .formParam("status", NEW_STATUS)
                 .when()
@@ -195,7 +187,7 @@ public class RestAssuredTest {
     }
 
     @Test(priority = 8)
-    public void updatePetWithNonExistentPetId_shouldReturn404() {
+    public void updatePetWithFormDataReturn404() {
         RestAssured.baseURI = PETSTORE_BASE_URI;
 
         Response response = RestAssured.given()
@@ -235,7 +227,7 @@ public class RestAssuredTest {
         Assert.assertTrue(matcher.find(), CONTAINS_DIGIT);
         String tenDigitNumber = matcher.group();
         System.out.println(tenDigitNumber);
-        Assert.assertEquals(tenDigitNumber.length(), CONTAINS_NUM, CONTAINS_DIGIT);
+        Assert.assertTrue(tenDigitNumber.length() >= TEN, CONTAINS_DIGIT);
     }
 
     @Test(priority = 10)

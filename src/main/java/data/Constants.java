@@ -45,6 +45,7 @@ public class Constants {
     public static final long ORDER_ID = 12345L,
             PET_ID = 54321L,
             SECOND = 2,
+            TEN = 10,
             LAST = 999999L;
 
     public static final int QUANTITY = 2,
