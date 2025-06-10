@@ -9,19 +9,16 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static data.Constants.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class RestAssuredTest {
     @Test
-    public void getBooksList() {
+    public void validateGetBooksList() {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
         List<Book> books = fetchBooks();
 
@@ -36,10 +33,10 @@ public class RestAssuredTest {
         Book firstBook = books.getFirst();
         Book secondBook = books.get(FIRST);
 
-       Assert.assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
-       Assert.assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
-       Assert.assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
-       Assert.assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
+        Assert.assertNotNull(firstBook.getIsbn(), ISBN_NOT_NULL);
+        Assert.assertNotNull(firstBook.getAuthor(), AUTHOR_NOT_EMPTY);
+        Assert.assertNotNull(secondBook.getIsbn(), ISBN_NOT_NULL);
+        Assert.assertNotNull(secondBook.getAuthor(), AUTHOR_NOT_EMPTY);
     }
 
     @Test(priority = 3)
@@ -107,7 +104,7 @@ public class RestAssuredTest {
     }
 
     @Test(priority = 5)
-    public void deleteBookShouldReturnUnauthorized() {
+    public void deleteBookReturnUnauthorized() {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
 
         Response response = RestAssured
@@ -231,11 +228,11 @@ public class RestAssuredTest {
     }
 
     @Test(priority = 10)
-    public void validateHarryPotterBookExists() {
-        RestAssured.baseURI = OPENLIBRARY_BASE_URI;
-
-        Response response = RestAssured.given()
-                .queryParam(CON_Q, HARRY)
+    public void searchHarryPotterBooksAndValidateFirstBook() {
+        Response response = RestAssured
+                .given()
+                .baseUri("https://openlibrary.org")
+                .queryParam("q", KEYWORD)
                 .when()
                 .get("/search.json")
                 .then()
@@ -243,26 +240,22 @@ public class RestAssuredTest {
                 .extract()
                 .response();
 
-        JsonPath jsonPath = response.jsonPath();
+        List<Map<String, Object>> docs = response.jsonPath().getList(DOC);
+        Assert.assertFalse(docs.isEmpty(), BOOKS_NOT_EMPTY);
 
-        List<Map<String, Object>> docs = jsonPath.getList(DOCS);
-        Assert.assertNotNull(docs, NOT_BE_NULL);
-        Assert.assertFalse(docs.isEmpty(), SHOULD_NOT_EMPTY);
+        Map<String, Object> firstBook = docs.getFirst();
 
-        boolean found = false;
+        String actualTitle = (String) firstBook.get("title");
+        Assert.assertEquals(actualTitle, EXPECTED_TITLE, MISMATCH);
 
-        for (Map<String, Object> book : docs) {
-            String title = (String) book.get("title");
-            List<String> authorNames = (List<String>) book.get("author_name");
+        Map<String, Object> books = docs.stream()
+                .filter(book -> EXPECTED_TITLE.equals(book.get("title")))
+                .findFirst()
+                .orElseThrow();
 
-            if ("Harry Potter and the Philosopher's Stone".equals(title)
-                    && authorNames != null && authorNames.contains("J. K. Rowling")) {
-                found = true;
-                break;
-            }
-        }
+        List<String> authors = (List<String>) books.get("author_name");
+        Assert.assertTrue(authors.contains(EXPECTED_AUTHOR), AUTHOR_MISMATCH);
 
-        Assert.assertTrue(found, EXPECTED_BOOK);
     }
 
     private List<Book> fetchBooks() {
