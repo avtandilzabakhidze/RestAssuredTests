@@ -14,12 +14,12 @@ public class Constants {
             ISBN_BASE = "ISBN",
             CONTAINS_DIGIT = "should contain a 13-digit",
             CODE_401 = "Expected 401 Code",
+            CODE_200 = "Expected 200 Code",
             USER_NOT_AUTHORIZED = "User not authorized!",
             UNEXPECTED_ERROR = "Unexpected error message",
             ISBN_NOT_NULL = "ISBN not be null",
             AUTHOR_NOT_EMPTY = "Author not be null",
             BOOKS_NOT_EMPTY = "Books list is empty",
-            CON_Q = "q",
             AUTHOR_MISMATCH = "Author does not match",
             TITLE_NOT_NULL = "Title is null",
             ISBN_NOT_NULL_DETAIL = "ISBN is null",
@@ -62,7 +62,7 @@ public class Constants {
 
     public static final int QUANTITY = 2,
             TOTAL_PRICE = 123,
-            QUAN = 1000,
+            THOUSAND = 1000,
             FIRST = 1;
 
     public static final boolean IS_TRUE = true;

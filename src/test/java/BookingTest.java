@@ -45,7 +45,7 @@ public class BookingTest {
                 .put(BOOKING_ENDPOINT + SLASH + firstBookingId);
 
         int statusCode = response.then().extract().statusCode();
-        Assert.assertEquals(statusCode, 200, CODE_401);
+        Assert.assertEquals(statusCode, 200, CODE_200);
 
         if (statusCode == 201) {
             response.prettyPrint();
@@ -67,7 +67,7 @@ public class BookingTest {
 
         assertThat(PAGES_COUNT_INVALID,
                 response.jsonPath().getList(BOOKS + ".pages"),
-                everyItem(lessThan(QUAN)));
+                everyItem(lessThan(THOUSAND)));
 
         String firstAuthor = response.jsonPath().getString(BOOKS + "[0].author");
         String secondAuthor = response.jsonPath().getString(BOOKS + "[1].author");
