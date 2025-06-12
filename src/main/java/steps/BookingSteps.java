@@ -1,13 +1,11 @@
 package steps;
 
+import api.BookingApi;
 import data.BookingRequests;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 
 import static data.Constants.*;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -17,18 +15,12 @@ public class BookingSteps {
     private Response updateResponse;
     private Response bookstoreResponse;
 
+    private final BookingApi bookingApi = new BookingApi();
     private final BookingRequests bookingRequests = new BookingRequests();
 
     public BookingSteps fetchFirstBookingId() {
-        firstBookingId = given()
-                .baseUri(BOOKING_BASE_URI)
-                .when()
-                .get(BOOKING_ENDPOINT)
-                .then()
-                .statusCode(200)
-                .extract()
-                .jsonPath()
-                .getInt("[0].bookingid");
+        Response response = bookingApi.getAllBookings();
+        firstBookingId = response.jsonPath().getInt("[0].bookingid");
         return this;
     }
 
@@ -38,13 +30,7 @@ public class BookingSteps {
     }
 
     public BookingSteps updateBooking() {
-        updateResponse = given()
-                .baseUri(BOOKING_BASE_URI)
-                .auth().preemptive().basic(ADMIN_USERNAME, ADMIN_PASSWORD)
-                .contentType(ContentType.JSON)
-                .body(bookingPayload.toString())
-                .when()
-                .put(BOOKING_ENDPOINT + SLASH + firstBookingId);
+        updateResponse = bookingApi.updateBooking(firstBookingId, bookingPayload);
         return this;
     }
 
@@ -55,29 +41,15 @@ public class BookingSteps {
     }
 
     public BookingSteps logDataIfStatusCodeIS201() {
-        int statusCode = updateResponse.then().extract().statusCode();
-
+        int statusCode = updateResponse.getStatusCode();
         if (statusCode == 201) {
-            bookstoreResponse.prettyPrint();
+            updateResponse.prettyPrint();
         }
-
-        return this;
-    }
-
-    public BookingSteps setBookstoreBaseUri() {
-        RestAssured.baseURI = BOOKSTORE_BASE_URI;
         return this;
     }
 
     public BookingSteps sendGetBooksRequest() {
-        bookstoreResponse = given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get(BOOKSTORE_BOOKS_ENDPOINT)
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
+        bookstoreResponse = bookingApi.getBooks();
         return this;
     }
 

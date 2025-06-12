@@ -1,5 +1,3 @@
-package tests;
-
 import api.F1DriversApi;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;

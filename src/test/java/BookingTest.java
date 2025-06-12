@@ -23,7 +23,6 @@ public class BookingTest {
     @Test(priority = 2)
     public void validateBooksPagesAndAuthors() {
         bookingSteps
-                .setBookstoreBaseUri()
                 .sendGetBooksRequest()
                 .validatePagesLessThan1000()
                 .validateFirstTwoAuthors();
