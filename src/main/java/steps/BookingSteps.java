@@ -62,6 +62,16 @@ public class BookingSteps {
         return this;
     }
 
+    public BookingSteps logDataIfStatusCodeIS201() {
+        int statusCode = updateResponse.then().extract().statusCode();
+
+        if (statusCode == 201) {
+            bookstoreResponse.prettyPrint();
+        }
+
+        return this;
+    }
+
     public BookingSteps setBookstoreBaseUri() {
         RestAssured.baseURI = BOOKSTORE_BASE_URI;
         return this;

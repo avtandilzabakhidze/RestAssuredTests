@@ -16,7 +16,8 @@ public class BookingTest {
                 .fetchFirstBookingId()
                 .buildBookingPayload()
                 .updateBooking()
-                .validateUpdateResponse();
+                .validateUpdateResponse()
+                .logDataIfStatusCodeIS201();
     }
 
     @Test(priority = 2)
