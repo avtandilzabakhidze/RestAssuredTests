@@ -12,7 +12,7 @@ public class F1DriversTest {
 
     @Test(priority = 1)
     public void validateF1Drivers() {
-        new F1DriversSteps()
+        f1DriversSteps
                 .setBaseUri()
                 .sendGetRequest()
                 .validateStatusAndMetadata()
