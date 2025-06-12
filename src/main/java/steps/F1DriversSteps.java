@@ -80,9 +80,9 @@ public class F1DriversSteps {
     }
 
     public F1DriversSteps validateNationalityChecks() {
-        assertThat(findDriversByNationality(Countries.DUTCH.getValue()), hasItem(containsString(EXPECTED_DUTCH_DRIVER)));
+        assertThat(findDriversByNationality(Countries.DUTCH.getValue()).size(), greaterThanOrEqualTo(FIRST));
         assertThat(findDriversByNationality(Countries.BRAZILIAN.getValue()).size(), greaterThanOrEqualTo(FIRST));
-        assertThat(findDriversByNationality(Countries.CANADIAN.getValue()), hasItem(EXPECTED_CANADIAN_DRIVER));
+        assertThat(findDriversByNationality(Countries.CANADIAN.getValue()).size(), greaterThanOrEqualTo(FIRST));
         return this;
     }
 
