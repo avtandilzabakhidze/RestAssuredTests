@@ -97,7 +97,6 @@ public class Constants {
             THOUSAND = 1000,
             FIRST = 1,
             CATEGORY_ID = 1,
-            CODE_200_INT = 200,
             FIRST_RANDOM = 1000000,
             LAST_RANDOM = 9999999;
 

@@ -42,14 +42,14 @@ public class PetStoreTest {
                 .when()
                 .post(PET_ENDPOINT)
                 .then()
-                .statusCode(CODE_200_INT)
+                .statusCode(200)
                 .body("id", equalTo((Number) petId))
                 .body("name", equalTo(petName))
                 .body("status", equalTo(AVAILABLE_STATUS));
 
         Response findResponse = await()
-                .atMost(10, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
+                .atMost(TEN, TimeUnit.SECONDS)
+                .pollInterval(FIRST, TimeUnit.SECONDS)
                 .until(() -> {
                     Response response = given()
                             .baseUri(PETSTORE_BASE_URI)
@@ -82,7 +82,7 @@ public class PetStoreTest {
                 .when()
                 .post(PET_ENDPOINT_WITH_ID, petId)
                 .then()
-                .statusCode(CODE_200_INT)
+                .statusCode(200)
                 .body(MESSAGE, equalTo(String.valueOf(petId)));
 
         given()
@@ -90,7 +90,7 @@ public class PetStoreTest {
                 .when()
                 .get(PET_ENDPOINT_WITH_ID, petId)
                 .then()
-                .statusCode(CODE_200_INT)
+                .statusCode(200)
                 .body("name", equalTo(newName))
                 .body("status", equalTo(newStatus));
     }
