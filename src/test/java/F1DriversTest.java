@@ -7,7 +7,6 @@ import steps.F1DriversSteps;
 import static data.Constants.F1_BASE_URI;
 
 public class F1DriversTest {
-
     private F1DriversApi f1DriversApi;
 
     @BeforeMethod
