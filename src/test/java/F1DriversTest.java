@@ -1,6 +1,6 @@
-import ge.tbc.tbcitacademy.Steps.F1Steps.F1DriversSteps;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import steps.F1DriversSteps;
 
 public class F1DriversTest {
     private F1DriversSteps f1DriversSteps;

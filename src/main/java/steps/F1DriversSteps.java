@@ -1,4 +1,4 @@
-package ge.tbc.tbcitacademy.Steps.F1Steps;
+package steps;
 
 import enums.Countries;
 import io.restassured.RestAssured;
