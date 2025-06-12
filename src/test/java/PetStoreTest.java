@@ -20,43 +20,42 @@ import static org.hamcrest.Matchers.*;
 public class PetStoreTest {
     Faker faker = new Faker();
 
-    @Test
+    @Test(priority = 1)
     public void addAndUpdatePetTest() {
-        Integer petId = new Random().nextInt(1000000, 9999999);
+        Integer petId = new Random().nextInt(FIRST_RANDOM, LAST_RANDOM);
         String petName = faker.animal().name();
-        String petStatus = "available";
 
         JSONObject category = new JSONObject();
-        category.put("id", 1);
-        category.put("name", "Dogs");
+        category.put("id", CATEGORY_ID);
+        category.put("name", DOGS_CATEGORY);
 
         JSONObject petRequest = new JSONObject();
         petRequest.put("id", petId);
         petRequest.put("name", petName);
-        petRequest.put("status", petStatus);
+        petRequest.put("status", AVAILABLE_STATUS);
         petRequest.put("category", category);
 
         given()
-                .baseUri("https://petstore.swagger.io/v2")
+                .baseUri(PETSTORE_BASE_URI)
                 .contentType(ContentType.JSON)
                 .body(petRequest.toString())
                 .when()
-                .post("/pet")
+                .post(PET_ENDPOINT)
                 .then()
-                .statusCode(200)
+                .statusCode(CODE_200_INT)
                 .body("id", equalTo((Number) petId))
                 .body("name", equalTo(petName))
-                .body("status", equalTo(petStatus));
+                .body("status", equalTo(AVAILABLE_STATUS));
 
         Response findResponse = await()
                 .atMost(10, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
                     Response response = given()
-                            .baseUri("https://petstore.swagger.io/v2")
-                            .queryParam("status", petStatus)
+                            .baseUri(PETSTORE_BASE_URI)
+                            .queryParam("status", AVAILABLE_STATUS)
                             .when()
-                            .get("/pet/findByStatus");
+                            .get(PET_FIND_BY_STATUS_ENDPOINT);
 
                     List<Integer> ids = response.path("id");
                     return ids != null && ids.contains(petId) ? response : null;
@@ -69,35 +68,34 @@ public class PetStoreTest {
                 .getMap("find { it.id == " + petId + " }");
 
         assertThat(foundPet.get("name").toString(), equalTo(petName));
-        assertThat(foundPet.get("status").toString(), equalTo(petStatus));
-        assertThat(((Map<?, ?>) foundPet.get("category")).get("name").toString(), equalTo("Dogs"));
+        assertThat(foundPet.get("status").toString(), equalTo(AVAILABLE_STATUS));
+        assertThat(((Map<?, ?>) foundPet.get("category")).get("name").toString(), equalTo(DOGS_CATEGORY));
 
         String newName = faker.animal().name();
-        String newStatus = "sold";
+        String newStatus = SOLD_STATUS;
 
         given()
-                .baseUri("https://petstore.swagger.io/v2")
+                .baseUri(PETSTORE_BASE_URI)
                 .contentType(ContentType.URLENC)
                 .formParam("name", newName)
                 .formParam("status", newStatus)
                 .when()
-                .post("/pet/{petId}", petId)
+                .post(PET_ENDPOINT_WITH_ID, petId)
                 .then()
-                .statusCode(200)
-                .body("message", equalTo(String.valueOf(petId)));
+                .statusCode(CODE_200_INT)
+                .body(MESSAGE, equalTo(String.valueOf(petId)));
 
-        Response finalResponse = given()
-                .baseUri("https://petstore.swagger.io/v2")
+        given()
+                .baseUri(PETSTORE_BASE_URI)
                 .when()
-                .get("/pet/{petId}", petId)
+                .get(PET_ENDPOINT_WITH_ID, petId)
                 .then()
-                .statusCode(200)
+                .statusCode(CODE_200_INT)
                 .body("name", equalTo(newName))
-                .body("status", equalTo(newStatus))
-                .extract().response();
+                .body("status", equalTo(newStatus));
     }
 
-    @Test
+    @Test(priority = 2)
     public void uploadPetImage() {
         long expectedFileSize = PICTURE_FILE.length();
 
