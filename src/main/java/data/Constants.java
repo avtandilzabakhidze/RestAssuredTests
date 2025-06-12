@@ -8,8 +8,6 @@ public class Constants {
             PASSWORD = "userNam",
             MESSAGE = "message",
             BOOKS = "books",
-            DOCS = "docs",
-            HARRY = "Harry Potter",
             REGEX = "\\b\\d{13}\\b",
             REGEX2 = "([+-]\\d{2})(\\d{2})$",
             REPLACE = "$1:$2",
@@ -31,9 +29,7 @@ public class Constants {
             PET_ID_MISMATCH = "Pet ID mismatch",
             QUANTITY_MISMATCH = "Quantity mismatch",
             NOT_BE_NULL = "should not be null",
-            SHOULD_NOT_EMPTY = "Docs list should not be empty",
             STATUS_MISMATCH = "Status mismatch",
-            EXPECTED_BOOK = "Expected book with the correct title and author was not found",
             COMPLETE_FLAG_MISMATCH = "Complete flag mismatch",
             SHIP_DATE = "2025-06-10T10:00:00.000Z",
             STATUS = "placed",
@@ -44,7 +40,20 @@ public class Constants {
             KEYWORD = "Harry Potter",
             EXPECTED_TITLE = "Harry Potter and the Order of the Phoenix",
             EXPECTED_AUTHOR = "J. K. Rowling",
-            SHIP_DATE_MISMATCH = "ShipDate mismatch";
+            SHIP_DATE_MISMATCH = "ShipDate mismatch",
+            BOOKING_BASE_URI = "https://restful-booker.herokuapp.com",
+            BOOKING_ENDPOINT = "/booking",
+            BOOKSTORE_BOOKS_ENDPOINT = "/BookStore/v1/Books",
+            ADMIN_USERNAME = "admin",
+            ADMIN_PASSWORD = "password123",
+            FIRST_NAME = "John",
+            LAST_NAME = "Doe",
+            FIRST_AUTH = "Richard E. Silverman",
+            SECOND_AUTH = "Addy Osmani",
+            SLASH = "/",
+            CHECKIN_DATE = "2024-01-01",
+            CHECKOUT_DATE = "2024-01-10",
+            ADDITIONAL_NEEDS = "Breakfast";
 
     public static final long ORDER_ID = 12345L,
             PET_ID = 54321L,
@@ -52,6 +61,8 @@ public class Constants {
             LAST = 999999L;
 
     public static final int QUANTITY = 2,
+            TOTAL_PRICE = 123,
+            QUAN = 1000,
             FIRST = 1;
 
     public static final boolean IS_TRUE = true;
