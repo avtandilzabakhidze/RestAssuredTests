@@ -4,6 +4,10 @@ public class Constants {
     public static final String BOOKSTORE_BASE_URI = "https://bookstore.toolsqa.com",
             PETSTORE_BASE_URI = "https://petstore.swagger.io/v2",
             OPENLIBRARY_BASE_URI = "https://openlibrary.org",
+            F1_BASE_URI = "https://api.jolpi.ca/ergast/f1",
+            F1_2025_DRIVERS_ENDPOINT = "/2025/drivers/",
+            SERIES_F1 = "f1",
+            SEASON_2025 = "2025",
             USER_NAME = "userNam",
             PASSWORD = "userNam",
             MESSAGE = "message",
@@ -51,9 +55,17 @@ public class Constants {
             FIRST_AUTH = "Richard E. Silverman",
             SECOND_AUTH = "Addy Osmani",
             SLASH = "/",
-            CHECKIN_DATE = "2024-01-01",
-            CHECKOUT_DATE = "2024-01-10",
-            ADDITIONAL_NEEDS = "Breakfast";
+            CHECKIN_DATE = "2020-01-01",
+            CHECKOUT_DATE = "2025-01-01",
+            ADDITIONAL_NEEDS = "Breakfast",
+            DRIVER_NAME_NOT_EMPTY = "Driver name should not be empty",
+            POST_2000_MIN_COUNT_MSG = "Expected at least 8 drivers born after 2000",
+            FRENCH_DRIVERS_EXPECTED = "Expected 3 French drivers",
+            AB_NAME_START_MIN = "Expected at least 5 drivers with family name starting with A or B",
+            BRITISH_YOUNG_MIN = "Expected at least 3 British drivers born after 1990",
+            SPECIAL_DRIVERS_MIN = "Expected at least 5 special drivers (number < 10 or long family name)",
+            EXPECTED_DUTCH_DRIVER = "Verstappen",
+            EXPECTED_CANADIAN_DRIVER = "Lance Stroll";
 
     public static final long ORDER_ID = 12345L,
             PET_ID = 54321L,
@@ -62,6 +74,9 @@ public class Constants {
 
     public static final int QUANTITY = 2,
             TOTAL_PRICE = 123,
+            THREE = 3,
+            EIGHT = 8,
+            FIVE = 5,
             THOUSAND = 1000,
             FIRST = 1;
 
