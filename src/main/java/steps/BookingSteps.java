@@ -1,5 +1,6 @@
 package steps;
 
+import data.BookingRequests;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -16,6 +17,8 @@ public class BookingSteps {
     private Response updateResponse;
     private Response bookstoreResponse;
 
+    private final BookingRequests bookingRequests = new BookingRequests();
+
     public BookingSteps fetchFirstBookingId() {
         firstBookingId = given()
                 .baseUri(BOOKING_BASE_URI)
@@ -30,18 +33,7 @@ public class BookingSteps {
     }
 
     public BookingSteps buildBookingPayload() {
-        bookingPayload = new JSONObject();
-        bookingPayload.put("firstname", FIRST_NAME);
-        bookingPayload.put("lastname", LAST_NAME);
-        bookingPayload.put("totalprice", TOTAL_PRICE);
-        bookingPayload.put("depositpaid", IS_TRUE);
-
-        JSONObject bookingDates = new JSONObject();
-        bookingDates.put("checkin", CHECKIN_DATE);
-        bookingDates.put("checkout", CHECKOUT_DATE);
-        bookingPayload.put("bookingdates", bookingDates);
-
-        bookingPayload.put("additionalneeds", ADDITIONAL_NEEDS);
+        bookingPayload = bookingRequests.getBookingPayload();
         return this;
     }
 

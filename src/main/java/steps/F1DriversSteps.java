@@ -1,34 +1,26 @@
 package steps;
 
 import enums.Countries;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 import java.util.List;
 
 import static data.Constants.*;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class F1DriversSteps {
-    private Response response;
 
-    public F1DriversSteps setBaseUri() {
-        RestAssured.baseURI = F1_BASE_URI;
-        return this;
-    }
+    private final Response response;
 
-    public F1DriversSteps sendGetRequest() {
-        response = given()
-                .when()
-                .get(F1_BASE_URI + F1_2025_DRIVERS_ENDPOINT);
-        return this;
+    public F1DriversSteps(Response response) {
+        this.response = response;
+
+        response.then().statusCode(200);
     }
 
     public F1DriversSteps validateStatusAndMetadata() {
         response.then()
-                .statusCode(200)
                 .body("MRData.series", equalTo(SERIES_F1))
                 .body("MRData.DriverTable.season", equalTo(SEASON_2025));
         return this;

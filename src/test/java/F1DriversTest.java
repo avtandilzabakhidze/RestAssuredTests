@@ -1,20 +1,27 @@
+package tests;
+
+import api.F1DriversApi;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import steps.F1DriversSteps;
 
+import static data.Constants.F1_BASE_URI;
+
 public class F1DriversTest {
-    private F1DriversSteps f1DriversSteps;
+
+    private F1DriversApi f1DriversApi;
 
     @BeforeMethod
     public void setUp() {
-        f1DriversSteps = new F1DriversSteps();
+        f1DriversApi = new F1DriversApi();
     }
 
-    @Test(priority = 1)
-    public void validateF1Drivers() {
-        f1DriversSteps
-                .setBaseUri()
-                .sendGetRequest()
+    @Test
+    public void validateF1DriversTest() {
+        Response response = f1DriversApi.getF1Drivers(F1_BASE_URI);
+
+        new F1DriversSteps(response)
                 .validateStatusAndMetadata()
                 .validateDriverCount()
                 .validateOldDriver()
