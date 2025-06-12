@@ -1,9 +1,10 @@
 package data;
 
+import java.io.File;
+
 public class Constants {
     public static final String BOOKSTORE_BASE_URI = "https://bookstore.toolsqa.com",
             PETSTORE_BASE_URI = "https://petstore.swagger.io/v2",
-            OPENLIBRARY_BASE_URI = "https://openlibrary.org",
             F1_BASE_URI = "https://api.jolpi.ca/ergast/f1",
             F1_2025_DRIVERS_ENDPOINT = "/2025/drivers/",
             SERIES_F1 = "f1",
@@ -15,6 +16,7 @@ public class Constants {
             REGEX = "\\b\\d{13}\\b",
             REGEX2 = "([+-]\\d{2})(\\d{2})$",
             REPLACE = "$1:$2",
+            SIZE_REGEX = "(\\d+)",
             ISBN_BASE = "ISBN",
             CONTAINS_DIGIT = "should contain a 13-digit",
             CODE_401 = "Expected 401 Code",
@@ -55,6 +57,7 @@ public class Constants {
             FIRST_AUTH = "Richard E. Silverman",
             SECOND_AUTH = "Addy Osmani",
             SLASH = "/",
+            FILE_NOT_MATCH ="File size should match",
             CHECKIN_DATE = "2020-01-01",
             CHECKOUT_DATE = "2025-01-01",
             ADDITIONAL_NEEDS = "Breakfast",
@@ -65,9 +68,14 @@ public class Constants {
             BRITISH_YOUNG_MIN = "Expected at least 3 British drivers born after 1990",
             SPECIAL_DRIVERS_MIN = "Expected at least 5 special drivers (number < 10 or long family name)",
             EXPECTED_DUTCH_DRIVER = "Verstappen",
+            ADDITIONAL_METADATA = "Picture",
             EXPECTED_CANADIAN_DRIVER = "Lance Stroll";
 
+    public static final File PICTURE_FILE = new File("src/test/resources/gog.jpg");
+
     public static final long ORDER_ID = 12345L,
+            FIRST_PET_ID = 1L,
+            NEGATIVE_ONE = -1,
             PET_ID = 54321L,
             TEN = 10,
             LAST = 999999L;
