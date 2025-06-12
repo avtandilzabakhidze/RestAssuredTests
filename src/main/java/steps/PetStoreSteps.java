@@ -58,7 +58,7 @@ public class PetStoreSteps {
 
     public PetStoreSteps verifyPetInList() {
         Response findResponse = await()
-                .atMost(TEN, TimeUnit.SECONDS)
+                .atMost(TIME, TimeUnit.SECONDS)
                 .pollInterval(FIRST, TimeUnit.SECONDS)
                 .until(() -> {
                     Response response = given()

@@ -87,6 +87,7 @@ public class Constants {
             NEGATIVE_ONE = -1,
             PET_ID = 54321L,
             TEN = 10,
+            TIME = 20,
             LAST = 999999L;
 
     public static final int QUANTITY = 2,
