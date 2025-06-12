@@ -1,105 +1,100 @@
+import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static data.Constants.*;
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class PetStoreTest {
-    private final Random random = new Random();
+    Faker faker = new Faker();
 
     @Test
-    public void addUpdateAndValidatePet() {
-        // 1. Create a random pet ID and initial data
-        long petId = random.nextInt(10000) + 100000;  // safer bigger id
-        String initialName = "Buddy" + petId;
-        String initialStatus = "available";
+    public void addAndUpdatePetTest() {
+        Integer petId = new Random().nextInt(1000000, 9999999);
+        String petName = faker.animal().name();
+        String petStatus = "available";
 
-        // Build JSON body for new pet
-        JSONObject petBody = new JSONObject();
-        petBody.put("id", petId);
-        petBody.put("name", initialName);
-        petBody.put("status", initialStatus);
-
-        // Category (optional)
         JSONObject category = new JSONObject();
-        category.put("id", 0);
-        category.put("name", "dogs");
-        petBody.put("category", category);
+        category.put("id", 1);
+        category.put("name", "Dogs");
 
-        // Tags (optional)
-        petBody.put("tags", List.of(
-                new JSONObject().put("id", 0).put("name", "friendly"),
-                new JSONObject().put("id", 1).put("name", "cute")
-        ));
+        JSONObject petRequest = new JSONObject();
+        petRequest.put("id", petId);
+        petRequest.put("name", petName);
+        petRequest.put("status", petStatus);
+        petRequest.put("category", category);
 
-        // Photos URLs (optional)
-        petBody.put("photoUrls", List.of("https://example.com/photo1.jpg"));
-
-        // 2. Add the pet to the store
-        Response createResponse = given()
+        given()
                 .baseUri("https://petstore.swagger.io/v2")
                 .contentType(ContentType.JSON)
-                .body(petBody.toString())    // pass JSON string here!
+                .body(petRequest.toString())
                 .when()
-                .post("/pet");
+                .post("/pet")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo((Number) petId))
+                .body("name", equalTo(petName))
+                .body("status", equalTo(petStatus));
 
-        createResponse.then()
-                .statusCode(200);
+        Response findResponse = await()
+                .atMost(10, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(() -> {
+                    Response response = given()
+                            .baseUri("https://petstore.swagger.io/v2")
+                            .queryParam("status", petStatus)
+                            .when()
+                            .get("/pet/findByStatus");
 
-        // 3. Find pets by status - should include our pet
-        Response findResponse = given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .queryParam("status", initialStatus)
-                .when()
-                .get("/pet/findByStatus");
+                    List<Integer> ids = response.path("id");
+                    return ids != null && ids.contains(petId) ? response : null;
+                }, response -> response != null);
 
-        findResponse.then()
-                .statusCode(200);
-
-        // Validate that the pet ID is in the response array
-        List<Long> petIds = findResponse.jsonPath().getList("id", Long.class);
+        List<Integer> petIds = findResponse.path("id");
         assertThat(petIds, hasItem(petId));
 
-        // Extract the pet info using JsonPath with correct petId filtering
-        String foundName = findResponse.jsonPath().getString("find { it.id == " + petId + " }.name");
-        String foundStatus = findResponse.jsonPath().getString("find { it.id == " + petId + " }.status");
+        Map<String, Object> foundPet = findResponse.jsonPath()
+                .getMap("find { it.id == " + petId + " }");
 
-        assertThat(foundName, equalTo(initialName));
-        assertThat(foundStatus, equalTo(initialStatus));
+        assertThat(foundPet.get("name").toString(), equalTo(petName));
+        assertThat(foundPet.get("status").toString(), equalTo(petStatus));
+        assertThat(((Map<?, ?>) foundPet.get("category")).get("name").toString(), equalTo("Dogs"));
 
-        // 4. Update the pet name and status via form data
-        String updatedName = initialName + "_Updated";
-        String updatedStatus = "sold";
+        String newName = faker.animal().name();
+        String newStatus = "sold";
 
         given()
                 .baseUri("https://petstore.swagger.io/v2")
                 .contentType(ContentType.URLENC)
-                .formParam("name", updatedName)
-                .formParam("status", updatedStatus)
+                .formParam("name", newName)
+                .formParam("status", newStatus)
                 .when()
-                .post("/pet/" + petId)
+                .post("/pet/{petId}", petId)
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .body("message", equalTo(String.valueOf(petId)));
 
-        // 5. Get the pet by ID and verify the updated fields
-        Response getResponse = given()
+        Response finalResponse = given()
                 .baseUri("https://petstore.swagger.io/v2")
                 .when()
-                .get("/pet/" + petId);
-
-        getResponse.then()
+                .get("/pet/{petId}", petId)
+                .then()
                 .statusCode(200)
-                .body("name", equalTo(updatedName))
-                .body("status", equalTo(updatedStatus));
+                .body("name", equalTo(newName))
+                .body("status", equalTo(newStatus))
+                .extract().response();
     }
 
     @Test
