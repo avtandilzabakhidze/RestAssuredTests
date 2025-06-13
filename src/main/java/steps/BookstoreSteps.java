@@ -2,7 +2,8 @@ package steps;
 
 import data.models.booking.Book;
 import io.restassured.RestAssured;
-import org.testng.Assert;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 
 import java.util.List;
 
@@ -22,19 +23,24 @@ public class BookstoreSteps {
                 .getList("books", Book.class);
     }
 
-    public void validateAllBooksPagesLessThan1000(List<Book> books) {
+    public BookstoreSteps validateAllBooksPagesLessThan1000(List<Book> books) {
         for (Book book : books) {
-            Assert.assertTrue(book.getPages() < THOUSAND, NOT_FOUND);
+            MatcherAssert.assertThat("Book pages should be less than 1000",
+                    book.getPages(), Matchers.lessThan(THOUSAND));
         }
+
+        return this;
     }
 
-    public void validateAuthorsOfLastTwoBooks(List<Book> books) {
-        Assert.assertTrue(books.size() >= QUANTITY, NOT_FOUND);
+    public BookstoreSteps validateAuthorsOfLastTwoBooks(List<Book> books) {
+        MatcherAssert.assertThat("Books list size", books.size(), Matchers.greaterThanOrEqualTo(QUANTITY));
 
         Book secondLastBook = books.get(books.size() - QUANTITY);
-        Book lastBook = books.get(books.size() - 1);
+        Book lastBook = books.get(books.size() - FIRST);
 
-        Assert.assertEquals(secondLastBook.getAuthor(), SECOND_LASTNAME, MISMATCH);
-        Assert.assertEquals(lastBook.getAuthor(), FIRST_LASTNAME, MISMATCH);
+        MatcherAssert.assertThat("Second last book author", secondLastBook.getAuthor(), Matchers.equalTo(SECOND_LASTNAME));
+        MatcherAssert.assertThat("Last book author", lastBook.getAuthor(), Matchers.equalTo(FIRST_LASTNAME));
+
+        return this;
     }
 }
