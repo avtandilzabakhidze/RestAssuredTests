@@ -80,8 +80,11 @@ public class Constants {
             SOLD_STATUS = "sold",
             DOGS_CATEGORY = "Dogs",
             USER = "User",
+            NOT_FOUND = "Not found",
             PASSWORD_RANDOM = "secret123",
             APPLICATION = "application/json",
+            FIRST_LASTNAME = "Nicholas C. Zakas",
+            SECOND_LASTNAME  = "Marijn Haverbeke",
             URL_ESCUELAJS= "https://api.escuelajs.co/api",
             AVATAR = "https://en.wikipedia.org/wiki/Elephantidae#/media/File:Elephas_maximus_(Bandipur).jpg";
 
