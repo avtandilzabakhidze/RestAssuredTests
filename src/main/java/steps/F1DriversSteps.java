@@ -10,7 +10,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class F1DriversSteps {
-
     private final Response response;
 
     public F1DriversSteps(Response response) {

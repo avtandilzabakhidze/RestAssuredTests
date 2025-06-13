@@ -1,9 +1,9 @@
 package steps;
 
-import api.BookingApi;
 import data.BookingRequests;
 import io.restassured.response.Response;
 import org.json.JSONObject;
+import steps.api.BookingApi;
 
 import static data.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
