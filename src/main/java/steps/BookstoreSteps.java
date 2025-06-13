@@ -25,7 +25,7 @@ public class BookstoreSteps {
 
     public BookstoreSteps validateAllBooksPagesLessThan1000(List<Book> books) {
         for (Book book : books) {
-            MatcherAssert.assertThat("Book pages should be less than 1000",
+            MatcherAssert.assertThat(FILE_NOT_MATCH,
                     book.getPages(), Matchers.lessThan(THOUSAND));
         }
 
@@ -33,13 +33,13 @@ public class BookstoreSteps {
     }
 
     public BookstoreSteps validateAuthorsOfLastTwoBooks(List<Book> books) {
-        MatcherAssert.assertThat("Books list size", books.size(), Matchers.greaterThanOrEqualTo(QUANTITY));
+        MatcherAssert.assertThat(NOT_FOUND, books.size(), Matchers.greaterThanOrEqualTo(QUANTITY));
 
         Book secondLastBook = books.get(books.size() - QUANTITY);
         Book lastBook = books.get(books.size() - FIRST);
 
-        MatcherAssert.assertThat("Second last book author", secondLastBook.getAuthor(), Matchers.equalTo(SECOND_LASTNAME));
-        MatcherAssert.assertThat("Last book author", lastBook.getAuthor(), Matchers.equalTo(FIRST_LASTNAME));
+        MatcherAssert.assertThat(SECOND_LASTNAME, secondLastBook.getAuthor(), Matchers.equalTo(SECOND_LASTNAME));
+        MatcherAssert.assertThat(FIRST_LASTNAME, lastBook.getAuthor(), Matchers.equalTo(FIRST_LASTNAME));
 
         return this;
     }
