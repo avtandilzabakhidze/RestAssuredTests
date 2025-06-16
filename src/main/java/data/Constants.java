@@ -12,9 +12,9 @@ public class Constants {
             BOOKING_BASE_URI = "https://restful-booker.herokuapp.com",
             BOOKING_ENDPOINT = "/booking",
             BOOKSTORE_BOOKS_ENDPOINT = "/BookStore/v1/Books",
-            PETSTORE_FIND_BY_STATUS_ENDPOINT = "/pet/findByStatus",
-            PETSTORE_ADD_UPDATE_ENDPOINT = "/pet",
-            PETSTORE_FIND_BY_ID_ENDPOINT = "/pet/{petId}",
+            SWAPI_BASE_URI = "https://swapi.tech/api",
+            SWAPI_PLANETS_ENDPOINT = "/planets/",
+            SWAPI_QUERY_FORMAT = "json",
             USER_NAME = "userNam",
             PASSWORD = "userNam",
             ADMIN_USERNAME = "admin",
@@ -84,15 +84,31 @@ public class Constants {
             PASSWORD_RANDOM = "secret123",
             APPLICATION = "application/json",
             FIRST_LASTNAME = "Nicholas C. Zakas",
-            SECOND_LASTNAME  = "Marijn Haverbeke",
-            URL_ESCUELAJS= "https://api.escuelajs.co/api",
-            AVATAR = "https://en.wikipedia.org/wiki/Elephantidae#/media/File:Elephas_maximus_(Bandipur).jpg";
+            SECOND_LASTNAME = "Marijn Haverbeke",
+            URL_ESCUELAJS = "https://api.escuelajs.co/api",
+            AVATAR = "https://en.wikipedia.org/wiki/Elephantidae#/media/File:Elephas_maximus_(Bandipur).jpg",
+            DIGITS_REGEX = "\\d+",
+            QUERY_PARAM_FORMAT = "format",
+            PLANET = "planet should have",
+            PETSTORE_BASE_URI_V3 = "https://petstore3.swagger.io/api/v3",
+            JSON_PATH_PLANET = "result.properties",
+            EMPTY_PLANET_NAME = "Planet name should not be empty",
+            ROTATION_PERIOD_NOT_NUMERIC = "Rotation period should be numeric",
+            NULL_ORBITAL_PERIOD = "Orbital period should not be null",
+            EMPTY_CLIMATE = "Climate should not be empty",
+            TIMER = "2025-06-16T18:00:00.000Z",
+            INVALID_CREATION_DATE = "Creation date should be in the past",
+            CREATED_DATE_SORT_ERROR_PREFIX = "Planet creation date out of order at index ";
+
+    public static final int EXPECTED_RECENT_PLANET_COUNT = 3;
 
 
     public static final File PICTURE_FILE = new File("src/test/resources/gog.jpg");
 
     public static final long ORDER_ID = 12345L,
             FIRST_PET_ID = 1L,
+            ZERO = 0L,
+            NINE = 999L,
             NEGATIVE_ONE = -1,
             PET_ID = 54321L,
             TEN = 10,
@@ -104,6 +120,7 @@ public class Constants {
             THREE = 3,
             EIGHT = 8,
             FIVE = 5,
+            TWO = 2,
             THOUSAND = 1000,
             FIRST = 1,
             CATEGORY_ID = 1,
