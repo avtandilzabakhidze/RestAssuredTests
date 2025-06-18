@@ -1,6 +1,6 @@
 package steps;
 
-import data.models.booking.Book;
+import data.models.book.Book;
 import io.restassured.RestAssured;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

@@ -1,4 +1,4 @@
-package data.models.booking;
+package data.models.book;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
