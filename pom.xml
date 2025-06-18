@@ -123,4 +123,35 @@
             <version>4.2.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/test/resources/petstore.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <output>${project.basedir}/target/generated-sources/openapi</output>
+                            <apiPackage>api.pet</apiPackage>
+                            <modelPackage>data.models.pet</modelPackage>
+                            <invokerPackage>client.pet</invokerPackage>
+                            <library>rest-assured</library>
+                            <additionalProperties>
+                                <useLombok>true</useLombok>
+                                <lombokUseAccessors>true</lombokUseAccessors>
+                                <dateLibrary>java8</dateLibrary>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
