@@ -1,4 +1,4 @@
-import data.models.booking.Book;
+import data.models.book.Book;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import steps.BookstoreSteps;

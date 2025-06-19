@@ -2,7 +2,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import data.models.booking.Book;
+import data.models.book.Book;
 import data.models.ordering.Order;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
