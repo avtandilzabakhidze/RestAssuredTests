@@ -1,9 +1,10 @@
 package steps;
 
-import api.PetStoreApi;
 import com.github.javafaker.Faker;
+import data.models.petstore.Category;
+import data.models.petstore.Pet;
 import io.restassured.response.Response;
-import org.json.JSONObject;
+import steps.api.PetStoreApi;
 
 import java.io.File;
 import java.util.List;
@@ -17,6 +18,7 @@ import static data.Constants.*;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+
 
 public class PetStoreSteps {
     private final Faker faker = new Faker();
@@ -32,15 +34,8 @@ public class PetStoreSteps {
         petId = new Random().nextInt(FIRST_RANDOM, LAST_RANDOM);
         petName = faker.animal().name();
 
-        JSONObject category = new JSONObject()
-                .put("id", CATEGORY_ID)
-                .put("name", DOGS_CATEGORY);
-
-        JSONObject petRequest = new JSONObject()
-                .put("id", petId)
-                .put("name", petName)
-                .put("status", AVAILABLE_STATUS)
-                .put("category", category);
+        Category category = new Category(CATEGORY_ID, DOGS_CATEGORY);
+        Pet petRequest = new Pet(petId, petName, AVAILABLE_STATUS, category);
 
         Response response = petStoreApi.createPet(petRequest);
 

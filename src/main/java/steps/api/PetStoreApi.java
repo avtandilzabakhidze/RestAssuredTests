@@ -1,8 +1,8 @@
-package api;
+package steps.api;
 
+import data.models.petstore.Pet;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.json.JSONObject;
 
 import java.io.File;
 
@@ -10,7 +10,7 @@ import static data.Constants.*;
 import static io.restassured.RestAssured.given;
 
 public class PetStoreApi {
-    public Response createPet(JSONObject petRequest) {
+    public Response createPet(Pet petRequest) {
         return given()
                 .baseUri(PETSTORE_BASE_URI)
                 .contentType(ContentType.JSON)

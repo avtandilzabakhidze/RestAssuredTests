@@ -1,8 +1,8 @@
-import api.F1DriversApi;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import steps.F1DriversSteps;
+import steps.api.F1DriversApi;
 
 import static data.Constants.F1_BASE_URI;
 

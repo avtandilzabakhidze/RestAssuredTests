@@ -78,7 +78,16 @@ public class Constants {
             PET_ENDPOINT_WITH_ID = "/pet/{petId}",
             AVAILABLE_STATUS = "available",
             SOLD_STATUS = "sold",
-            DOGS_CATEGORY = "Dogs";
+            DOGS_CATEGORY = "Dogs",
+            USER = "User",
+            NOT_FOUND = "Not found",
+            PASSWORD_RANDOM = "secret123",
+            APPLICATION = "application/json",
+            FIRST_LASTNAME = "Nicholas C. Zakas",
+            SECOND_LASTNAME  = "Marijn Haverbeke",
+            URL_ESCUELAJS= "https://api.escuelajs.co/api",
+            AVATAR = "https://en.wikipedia.org/wiki/Elephantidae#/media/File:Elephas_maximus_(Bandipur).jpg";
+
 
     public static final File PICTURE_FILE = new File("src/test/resources/gog.jpg");
 
