@@ -12,6 +12,11 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <openapi-generator-maven-plugin.version>7.6.0</openapi-generator-maven-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <lombok.version>1.18.38</lombok.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <aspectj.version>1.9.21</aspectj.version>
     </properties>
 
     <dependencies>
@@ -122,6 +127,19 @@
             <artifactId>awaitility</artifactId>
             <version>4.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-maven-plugin</artifactId>
+            <version>7.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,25 +147,26 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.6.0</version>
+                <version>${openapi-generator-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/test/resources/petstore.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
                             <generatorName>java</generatorName>
-                            <output>${project.basedir}/target/generated-sources/openapi</output>
-                            <apiPackage>api.pet</apiPackage>
-                            <modelPackage>data.models.pet</modelPackage>
-                            <invokerPackage>client.pet</invokerPackage>
-                            <library>rest-assured</library>
-                            <additionalProperties>
-                                <useLombok>true</useLombok>
-                                <lombokUseAccessors>true</lombokUseAccessors>
+                            <apiPackage>com.example.api</apiPackage>
+                            <modelPackage>com.example.model</modelPackage>
+                            <invokerPackage>com.example.invoker</invokerPackage>
+                            <configOptions>
                                 <dateLibrary>java8</dateLibrary>
-                            </additionalProperties>
+                                <useLombok>true</useLombok>
+                                <library>resttemplate</library>
+                                <interfaceOnly>false</interfaceOnly>
+                                <useOneOfDiscriminatorLookup>true</useOneOfDiscriminatorLookup>
+                                <useBeanValidation>true</useBeanValidation>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
