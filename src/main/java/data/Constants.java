@@ -88,6 +88,7 @@ public class Constants {
             FIRST_LASTNAME = "Nicholas C. Zakas",
             SECOND_LASTNAME = "Marijn Haverbeke",
             URL_ESCUELAJS = "https://api.escuelajs.co/api",
+            SOUP_BASE_URL = "https://dl.eviware.com/soapuios/5.7.2/SoapUI-x64-5.7.2.exe",
             AVATAR = "https://en.wikipedia.org/wiki/Elephantidae#/media/File:Elephas_maximus_(Bandipur).jpg",
             DIGITS_REGEX = "\\d+",
             QUERY_PARAM_FORMAT = "format",
