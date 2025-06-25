@@ -4,6 +4,12 @@ import java.io.File;
 
 public class Constants {
     public static final String BOOKSTORE_BASE_URI = "https://bookstore.toolsqa.com",
+            BASE_URL = "http://localhost:8086",
+            VALID_PASSWORD = "Admin@123",
+            VALID_FIRST_NAME = "Admin",
+            VALID_LAST_NAME = "Test",
+            ROLE_ADMIN = "ADMIN",
+            PROTECTED_RESOURCE_MESSAGE = "Hello, you have access to a protected resource",
             PETSTORE_BASE_URI = "https://petstore.swagger.io/v2",
             F1_BASE_URI = "https://api.jolpi.ca/ergast/f1",
             F1_2025_DRIVERS_ENDPOINT = "/2025/drivers/",
